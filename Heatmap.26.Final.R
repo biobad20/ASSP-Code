@@ -7,7 +7,7 @@ library(ggplot2)
 library(ggnewscale)
 
 # Load and clean data
-file_path <- " x "
+file_path <- "Ecolog_Data (1).xlsx"
 data <- read_excel(file_path, sheet = "Ark1", skip = 1)
 colnames(data) <- make.names(colnames(data), unique = TRUE)
 
