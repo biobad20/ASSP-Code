@@ -1,6 +1,19 @@
-library(ggplot2)
-library(tidyr)
+# Load necessary libraries
+library(readxl)
 library(dplyr)
+library(tidyr)
+library(stringr)
+library(ggplot2)
+library(ggnewscale)
+
+# Load and clean data
+file_path <- " x "
+data <- read_excel(file_path, sheet = "Ark1", skip = 1)
+colnames(data) <- make.names(colnames(data), unique = TRUE)
+
+# Select needed columns
+data_means <- data %>%
+  select(Compound, substrate.group, contains("mean"))
 
 # Ensure `substrate.group` is included from the beginning
 heatmap_data <- data_means %>% select(Compound, substrate.group, all_of(selected_cols))
