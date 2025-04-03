@@ -1,4 +1,4 @@
-# Load necessary libraries
+# Load libraries
 library(readxl)
 library(dplyr)
 library(tidyr)
@@ -7,27 +7,24 @@ library(ggplot2)
 library(ggnewscale)
 
 # Load and clean data
-file_path <- "Ecolog_Data (1).xlsx"
+file_path <- ""
 data <- read_excel(file_path, sheet = "Ark1", skip = 1)
 colnames(data) <- make.names(colnames(data), unique = TRUE)
 
-# Select needed columns
+# Select mean columns
 data_means <- data %>%
   select(Compound, substrate.group, contains("mean"))
 
+#select 3.26 columns 
+selected_cols <- grep("5$", names(data_means), value = TRUE)
+
 # Ensure `substrate.group` is included from the beginning
 heatmap_data <- data_means %>% select(Compound, substrate.group, all_of(selected_cols))
-
-# Remove rows where Compound or substrate.group is NA
-heatmap_data <- heatmap_data %>% drop_na(Compound, substrate.group)
 
 # Reshape the data from wide to long format
 heatmap_melted <- heatmap_data %>%
   pivot_longer(cols = -c(Compound, substrate.group), names_to = "Condition", values_to = "Value") %>%
   drop_na()  # Remove any remaining NA values
-
-# Verify that substrate.group exists
-print(head(heatmap_melted))  # Check the first few rows
 
 # Order by substrate.group
 heatmap_melted <- heatmap_melted %>%
@@ -60,4 +57,5 @@ ggplot(heatmap_melted, aes(x = Condition, y = reorder(Compound, as.numeric(facto
     axis.title.x = element_text(face = "bold", size = 14),  # Bold x-axis title
     axis.title.y = element_text(face = "bold", size = 14)   # Bold y-axis title
     )
+
 
